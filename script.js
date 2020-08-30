@@ -1,40 +1,85 @@
-let val = [];
+let arr = [];
 let i = 0;
 let j = 0;
+let can;
 
 function setup() {
-  createCanvas(600, 400);
-  val = new Array(width);
-  for (let i = 0; i < val.length; i++) {
-    val[i] = random(height);
+  createCanvas(500, 400);
+  radio = createRadio();
+  radio.option("Bubble Sort");
+  radio.option("Merge Sort");
+  arr = new Array(50);
+  for (let i = 0; i < arr.length; i++) {
+    arr[i] = random(height);
   }
-//   bubbleSort(val);
 }
 
-// const bubbleSort = (arr) => {
-//   for (i = 0; i < arr.length; i++) {
-//     for (j = 0; j < arr.length - i - 1; j++) {
-     
-//     }
-//   }
-// };
-
-const swap = (val, y, z) => {
-    let temp = val[y];
-    val[y] = val[z];
-    val[z] = temp;
-}
-
-function draw() {
+function bubble() {
   background(0);
-  let y = val[j];
-  let z = val[j+1];
-  if(y > z){
-      swap(val, j, j+1)
+
+  let y = arr[j];
+  let z = arr[j + 1];
+  if (y > z) {
+    swap(arr, j, j + 1);
   }
   j++;
-  for (let i = 0; i < val.length; i++) {
+  if (j >= arr.length - i - 1) {
+    j = 0;
+    i++;
+  }
+}
+
+const swap = (arr, y, z) => {
+  let temp = arr[y];
+  arr[y] = arr[z];
+  arr[z] = temp;
+};
+
+const mergeSort = (arr) => {
+  if(arr.length <= 1){
+    return arr;
+  }
+
+  const middle = Math.floor(arr.length / 2);
+
+  const left = arr.slice(0, middle);
+  const right = arr.slice(middle);
+
+  
+  merge(mergeSort(left), mergeSort(right));
+};
+
+const merge = (left, right) => {
+  let res = [];
+  let leftX = 0;
+  let rightX = 0;
+
+  while (leftX < left.length && rightX < right.length) {
+    if (left[leftX] < right[rightX]) {
+      res.push(left[leftX]);
+      leftX++;
+    } else {
+      res.push(right[rightX]);
+      rightX++;
+    }
+  }
+
+  return res.concat(left.slice(leftX)).concat(right.slice(rightX));
+};
+
+function draw() {
+  if (radio.value() == "Bubble Sort") {
+    bubble();
+    execute();
+  } else if (radio.value() == "Merge Sort") {
+    mergeSort(arr);
+    execute();
+  }
+}
+
+const execute = () => {
+  for (let i = 0; i < arr.length; i++) {
     stroke(255);
-    line(i, height, i, height - val[i]);
+    rect(i * 10, 0, 10, height - arr[i]);
   }
 }
